@@ -1,3 +1,6 @@
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
 import java.math.BigInteger;
 import java.util.Random;
 
@@ -6,15 +9,15 @@ import java.util.Random;
 
 public class Lab2 {
 	
-	public static void main(String [] args){
+	public static void main(String [] args) throws IOException{
 				
 		Random rand = new Random();
 		BigInteger p, q, N, v, k, d;
 		
-		//System.out.println("Random: " + rand.nextInt());
-		////Generate large two prime numbers
-		p = BigInteger.probablePrime(32, rand );
-		q = BigInteger.probablePrime(32, rand );
+
+		//Generate large two prime numbers
+		p = BigInteger.probablePrime(512, rand );
+		q = BigInteger.probablePrime(512, rand );
 		System.out.println("Generate large two prime numbers:");
 		System.out.println("p = " + p + " and q = " + q );
 		
@@ -62,19 +65,37 @@ public class Lab2 {
 		System.out.println("Private key (d, N) is: (" + d + "," + N + ")");
 		
 		
-	    String orginalMsg = "johandaaafadasda" + "johandasda";
-	    System.out.println("Length: " + orginalMsg.length());
-	    
-	    BigInteger c = new BigInteger(orginalMsg.getBytes());
-	    
+		
+		//to read a string from keyboard
+		BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+		String input;   
+
+		System.out.println("Enter your Message: ");
+		input = br.readLine();
+		System.out.println("Length: " + input.length());
+		
+		BigInteger c = new BigInteger(input.getBytes());
+		
 	    BigInteger encrypted = c.modPow(k, N);
 	    
 	    BigInteger decrypted = encrypted.modPow(d, N);	    
-	    
+
+	    // to convert a BigInteger back to a string	
 	    String after = new String(decrypted.toByteArray());
 	    
-	    System.out.println(orginalMsg);
+	    System.out.println(input);
 	    System.out.println(after);
+	    
+	    
+	    //String orginalMsg = "johandaaafadasda" + "johandasda";
+	    //System.out.println("Length: " + orginalMsg.length());    
+	    //BigInteger c = new BigInteger(orginalMsg.getBytes());
+//	    System.out.println(orginalMsg);
+//	    System.out.println(after);
+	    
+	    
+
+
 	    
 		
 //		// to convert an integer b into a BigInteger
