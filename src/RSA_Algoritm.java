@@ -16,6 +16,8 @@ public class RSA_Algoritm {
 	
 	
 	public RSA_Algoritm (int bitLength) {
+		
+		
 		p = BigInteger.probablePrime(bitLength, rand );
 		q = BigInteger.probablePrime(bitLength, rand );
 		
@@ -32,10 +34,13 @@ public class RSA_Algoritm {
 		
 		d = k.modInverse(v);
 		
-		
-		
+	}
+	
+	
+	private void compute(){
 		
 	}
+	
 	
 	
 	
