@@ -9,15 +9,17 @@ import java.util.Random;
 
 public class Lab2 {
 	
+	Random rand = new Random();
+	BigInteger p, q, N, v, k, d;
 	
-	public void run() throws IOException{
+	int bitLength = 24;
+	int smallerBitLength;
+	
+	
+	
+	public void algoritm(){
 		
-		Random rand = new Random();
-		BigInteger p, q, N, v, k, d;
-		
-		int bitLength = 64;
-		
-		// Generate two large prime numbers p and q. Unique for every receiver
+		// Generate two random large prime numbers p and q. Should be unique for every receiver
 		p = BigInteger.probablePrime(bitLength, rand );
 		q = BigInteger.probablePrime(bitLength, rand );
 		System.out.println("Generate large two prime numbers:");
@@ -30,6 +32,7 @@ public class Lab2 {
 		System.out.println("N is a part of the public key.");
 		System.out.println("N = " + N);
 		
+		
 		// Compute the the number v
 		v = (p.subtract(BigInteger.ONE)).multiply(q.subtract(BigInteger.ONE));
 		System.out.println("----------------------------------------");
@@ -37,10 +40,9 @@ public class Lab2 {
 		System.out.println("v = " + v);
 		
 		//find k thats a relative prime to v.
-		int smallerBitLength;
+
 		smallerBitLength = v.bitLength() - 1;
 		k = BigInteger.probablePrime(smallerBitLength, rand);
-		
 		
 		// Find a number thats satisfy the equation gcd(v,k)=1. which is the greatest common denominator.
 		// returns true if gcd(v,k)=1
@@ -68,6 +70,10 @@ public class Lab2 {
 		System.out.println("Private key (d, N) is: (" + d + "," + N + ")");
 		System.out.println("----------------------------------------");
 		
+		
+	}
+	public void userDialog() throws IOException{
+		
 		//to read a string from keyboard
 		BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
 		String input; 
@@ -76,6 +82,7 @@ public class Lab2 {
 		input = br.readLine();
 		System.out.println("Length: " + input.length());
 		
+		
 		//convert the message to a BigInteger.	
 		BigInteger c = new BigInteger(input.getBytes());
 		
@@ -83,13 +90,15 @@ public class Lab2 {
 		System.out.println("We know use the Public key (k, N) to encrypt the message m:\n...");
 		System.out.println(" --> c = m^e mod N ...and sends c ");
 		
-	    BigInteger encrypted = c.modPow(k, N);
+	    //The encryped message as a BigInteger
+		BigInteger encrypted = c.modPow(d, N);
 	    
 	    System.out.println("----------------------------------------");
 	    System.out.println("And the revciver has the Private key (d, N) to decrypt the message by computing:\n...");
-	    System.out.println("--> m = c^d mod N ");
+	    System.out.println(" --> m = c^d mod N ");
 	    
-	    BigInteger decrypted = encrypted.modPow(d, N);	    
+	    //The decryped message as a BigInteger
+	    BigInteger decrypted = encrypted.modPow(k, N);	    
 
 	    // to convert a BigInteger back to a string	
 	    String after = new String(decrypted.toByteArray());
@@ -102,6 +111,14 @@ public class Lab2 {
 	    System.out.println("The message the receiver got after decryption\n");
 	    System.out.println(after);
 		
+	}
+	
+	public void run() throws IOException{
+		
+		
+		algoritm();
+		
+		userDialog();
 		
 		
 	}
