@@ -87,6 +87,7 @@ public class SecureAdditionClient {
 			addClient.run();
 		}
 		catch ( UnknownHostException uhx ) {
+			System.out.println("No server up..");
 			System.out.println( uhx );
 			uhx.printStackTrace();
 		}

@@ -1,0 +1,27 @@
+Hi,
+
+if you want to run the example SecureAdditionServer/Client from Ch12 on two machines (the server on one machine and the client on a different on)
+
+then the onlt thing you need to do is to open two command windows. In one you run first the server, and in the second one you run:
+
+java SecureAdditionClient 130.22.44.56
+
+that is you pass as argument the IP address of the server. In my case the server is running on 130.22.44.56
+
+The server IP address is taken care by (***)
+
+    public static void main( String[] args ) {
+        try {
+            InetAddress host = InetAddress.getLocalHost();
+           
+            if ( args.length > 0 ) {
+                host = InetAddress.getByName( args[0] );     (***)
+            }
+            SecureAdditionClient addClient = new SecureAdditionClient( host );
+            addClient.run();
+        }
+        catch ( UnknownHostException uhx ) {
+            System.out.println( uhx );
+            uhx.printStackTrace();
+        }
+    }
