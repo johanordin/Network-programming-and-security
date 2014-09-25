@@ -3,6 +3,7 @@
 import java.io.*;
 import java.net.*;
 import java.security.KeyStore;
+
 import javax.net.ssl.*;
 
 public class SecureAdditionClient {
@@ -47,9 +48,16 @@ public class SecureAdditionClient {
 			SSLContext sslContext = SSLContext.getInstance( "TLS" );
 			sslContext.init( kmf.getKeyManagers(), tmf.getTrustManagers(), null );
 			
+			
 			SSLSocketFactory sslFact = sslContext.getSocketFactory();      	
 			SSLSocket client =  (SSLSocket)sslFact.createSocket(host, port);
 			client.setEnabledCipherSuites( client.getSupportedCipherSuites() );
+			
+			// String[] suites = client.getSupportedCipherSuites();
+			client.addHandshakeCompletedListener(new MyHandshakeListener());
+			
+			client.startHandshake();
+			
 			System.out.println("\n>>>> SSL/TLS handshake completed");
 
 			
@@ -93,3 +101,11 @@ public class SecureAdditionClient {
 		}
 	}
 }
+
+
+class MyHandshakeListener implements HandshakeCompletedListener {
+	  public void handshakeCompleted(HandshakeCompletedEvent e) {
+	    System.out.println("Handshake succesful!");
+	    System.out.println("Using cipher suite: " + e.getCipherSuite());
+	  }
+	}

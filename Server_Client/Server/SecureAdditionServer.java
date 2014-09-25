@@ -50,7 +50,10 @@ public class SecureAdditionServer {
 			
 			SSLServerSocketFactory sslServerFactory = sslContext.getServerSocketFactory();
 			SSLServerSocket sss = (SSLServerSocket) sslServerFactory.createServerSocket( port );
+			
 			sss.setEnabledCipherSuites( sss.getSupportedCipherSuites() );
+
+			
 			System.out.println("\n>>>> SecureAdditionServer: active ");
 			SSLSocket incoming = (SSLSocket)sss.accept();
 
@@ -98,4 +101,6 @@ public class SecureAdditionServer {
 		addServe.run();
 	}
 }
+
+
 
