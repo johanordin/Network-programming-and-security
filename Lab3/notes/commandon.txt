@@ -1,0 +1,8 @@
+
+keytool -genkey -alias server-alias -keyalg RSA -keypass qwerty12345 -storepass qwerty12345 -keystore KeyClientJohan.ks
+
+
+keytool -export -alias server-alias -storepass changit -file server.cer -keystore johan.ks
+
+
+keytool -import -v -trustcacerts -alias server-alias -file server.cer -keystore cacerts.jks -keypass changeit -storepass changeit

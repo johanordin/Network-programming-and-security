@@ -11,11 +11,18 @@ public class SecureAdditionClient {
 	private InetAddress host;
 	private int port;
 	// This is not a reserved port number 
+//	static final int DEFAULT_PORT = 8189;
+//	static final String KEYSTORE = "jpatkeystore.ks";
+//	static final String TRUSTSTORE = "jpattruststore.ks";
+//	static final String STOREPASSWD = "changeit";
+//	static final String ALIASPASSWD = "changeit";
+	
+	// This is not a reserved port number 
 	static final int DEFAULT_PORT = 8189;
-	static final String KEYSTORE = "jpatkeystore.ks";
-	static final String TRUSTSTORE = "jpattruststore.ks";
-	static final String STOREPASSWD = "changeit";
-	static final String ALIASPASSWD = "changeit";
+	static final String KEYSTORE = "KeyClientJohan.ks";
+	static final String TRUSTSTORE = "TrustClientJohan.ks";
+	static final String STOREPASSWD = "qwerty12345";
+//	static final String ALIASPASSWD = "changeit";
   
 	
 	// Constructor @param host Internet address of the host where the server is located
