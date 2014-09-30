@@ -3,6 +3,7 @@
 import java.io.*;
 import java.net.*;
 import java.security.KeyStore;
+import java.util.Enumeration;
 
 import javax.net.ssl.*;
 
@@ -32,6 +33,10 @@ public class SecureAdditionClient {
 			KeyStore ks = KeyStore.getInstance( "JCEKS" );
 			ks.load( new FileInputStream( KEYSTORE ), STOREPASSWD.toCharArray() );
 			
+			Enumeration en = ks.aliases();
+		      while (en.hasMoreElements()){
+		          System.out.println(en.nextElement()); 
+		       }
 			KeyStore ts = KeyStore.getInstance( "JCEKS" );
 			ts.load( new FileInputStream( TRUSTSTORE ), STOREPASSWD.toCharArray() );
 			
@@ -51,11 +56,11 @@ public class SecureAdditionClient {
 			
 			SSLSocketFactory sslFact = sslContext.getSocketFactory();      	
 			SSLSocket client =  (SSLSocket)sslFact.createSocket(host, port);
+			
 			client.setEnabledCipherSuites( client.getSupportedCipherSuites() );
 			
 			// String[] suites = client.getSupportedCipherSuites();
-			client.addHandshakeCompletedListener(new MyHandshakeListener());
-			
+			client.addHandshakeCompletedListener(new MyHandshakeListener());	
 			client.startHandshake();
 			
 			System.out.println("\n>>>> SSL/TLS handshake completed");

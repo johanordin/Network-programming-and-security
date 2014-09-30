@@ -2,7 +2,11 @@
 
 import java.io.*;
 import java.net.*;
+
 import javax.net.ssl.*;
+
+import sun.security.tools.KeyTool;
+
 import java.security.*;
 import java.util.StringTokenizer;
 
@@ -16,6 +20,8 @@ public class SecureAdditionServer {
 	static final String STOREPASSWD = "changeit";
 	static final String ALIASPASSWD = "changeit";
 	
+	
+	
 	/** Constructor
 	 * @param port The port where the server
 	 *    will listen for requests
@@ -24,11 +30,16 @@ public class SecureAdditionServer {
 		this.port = port;
 	}
 	
+	
+	
 	/** The method that does the work for the class */
 	public void run() {
 		try {
 			
 			// First initialize the key and trust material
+			
+			System.out.println(KeyStore.getDefaultType());
+			
 			KeyStore ks = KeyStore.getInstance( "JCEKS" );
 			ks.load( new FileInputStream( KEYSTORE ), STOREPASSWD.toCharArray() );
 			
@@ -42,6 +53,16 @@ public class SecureAdditionServer {
 			// TrustManagers decide whether to allow connections
 			TrustManagerFactory tmf = TrustManagerFactory.getInstance( "SunX509" );
 			tmf.init( ts );
+			
+			// --------------------------------------------------------//
+			
+//			File keystoreFile = new File();
+//			
+//			keystoreFile.getParentFile().mkdirs();
+//			KeyTool kt = new KeyTool(keystoreFile, KEYSTORE_PASSWORD);
+//			// Generate a self signed RSA key with a life of 10 years..
+//			kt.genKeyPair("selfsigned", "RSA", 2048, 3600);
+//			kt.saveKeyStore();
 			
 			// --------------------------------------------------------//
 			
