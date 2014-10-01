@@ -80,40 +80,86 @@ public class SecureAdditionServer {
 			
 			sss.setEnabledCipherSuites( sss.getSupportedCipherSuites() );
 			//Needed to auth client?
-			//sss.setNeedClientAuth(true);
+			sss.setNeedClientAuth(true);
 			
 			System.out.println("\n>>>> SecureAdditionServer: active ");
 			SSLSocket incoming = (SSLSocket)sss.accept();
 			
 			// --------------------------------------------------------//
-
-			BufferedReader in = new BufferedReader( new InputStreamReader( incoming.getInputStream() ) );
+			// declare the buffers
+			BufferedReader inClient = new BufferedReader( new InputStreamReader( incoming.getInputStream() ) );
 			PrintWriter out = new PrintWriter( incoming.getOutputStream(), true );			
 			
+			System.out.println("[S] - Reads option from client..");
+			int choice = Integer.parseInt(inClient.readLine());
+			String filename = inClient.readLine();
 			
+			System.out.println("[S] : " + choice);
+			System.out.println("[S] : " + filename);
 			
-			String str;
-
-			while ( !(str = in.readLine()).equals("") ) {
-				double result = 0;
-				StringTokenizer st = new StringTokenizer( str );
+			if (choice == 1){
+				System.out.println("[S] - Starting to send the file..");
 				
-				try {
-					while( st.hasMoreTokens() ) {
-						Double d = new Double( st.nextToken() );
-						result += d.doubleValue();
-					}
-					out.println( "The result is " + result );
+				FileReader in = new FileReader("files/" + filename);
+				BufferedReader br = new BufferedReader( in );
+				String line = br.readLine();
+			    while ( line != null ) {
+			        out.println(line);
+			        //System.out.println(line);
+			        line = br.readLine();
+			    }
+			    System.out.println("[S] - Server done..");
+			    in.close();
+			    br.close();
+				
+			} else if (choice == 2) {
+				System.out.println("Uploading the file to the server..");
+				
+				
+				
+				
+				
+				
+				
+				
+			} else if (choice == 3) {
+				System.out.println("[S] : Deleting the file from server..");
+
+				File file = new File("files/" + filename);
+				
+				if(!file.delete()){
+					System.out.println("[S] : Deleting failed.");
 				}
-				catch( NumberFormatException nfe ) {
-					out.println( "Sorry, your list contains an invalid number" );
-				}
+				
+			} else {
+				System.out.println("Quiting..");
+				System.exit(0);
 			}
 			
 			
 			
+//			String str;
+//
+//			while ( !(str = in.readLine()).equals("") ) {
+//				double result = 0;
+//				StringTokenizer st = new StringTokenizer( str );
+//				
+//				try {
+//					while( st.hasMoreTokens() ) {
+//						Double d = new Double( st.nextToken() );
+//						result += d.doubleValue();
+//					}
+//					out.println( "The result is " + result );
+//				}
+//				catch( NumberFormatException nfe ) {
+//					out.println( "Sorry, your list contains an invalid number" );
+//				}
+//			}
 			
 			
+			
+			// --------------------------------------------------------//
+			//Super important --> Closing the connection.
 			incoming.close();
 		}
 		catch( Exception x ) {

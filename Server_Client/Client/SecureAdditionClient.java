@@ -4,6 +4,7 @@ import java.io.*;
 import java.net.*;
 import java.security.KeyStore;
 import java.util.Enumeration;
+import java.util.Scanner;
 
 import javax.net.ssl.*;
 
@@ -60,29 +61,87 @@ public class SecureAdditionClient {
 			
 			SSLContext sslContext = SSLContext.getInstance( "TLS" );
 			sslContext.init( kmf.getKeyManagers(), tmf.getTrustManagers(), null );
-			
-			
 			SSLSocketFactory sslFact = sslContext.getSocketFactory();      	
-			SSLSocket client =  (SSLSocket)sslFact.createSocket(host, port);
 			
+			SSLSocket client =  (SSLSocket)sslFact.createSocket(host, port);	
 			client.setEnabledCipherSuites( client.getSupportedCipherSuites() );
 			
-			// String[] suites = client.getSupportedCipherSuites();
+			String[] suites = client.getSupportedCipherSuites();
+			System.out.println(suites);
+			
 			client.addHandshakeCompletedListener(new MyHandshakeListener());	
 			client.startHandshake();
 			
 			System.out.println("\n>>>> SSL/TLS handshake completed");
 
 			
+			//Create buffers to write to server and receive from server
 			BufferedReader socketIn;
 			socketIn = new BufferedReader( new InputStreamReader( client.getInputStream() ) );
 			PrintWriter socketOut = new PrintWriter( client.getOutputStream(), true );
 			
 			
-			String numbers = "1.2 3.4 5.6";
-			System.out.println( ">>>> Sending the numbers " + numbers + " to SecureAdditionServer" );
-			socketOut.println( numbers );
-			System.out.println( socketIn.readLine() );
+			// --------------------------------------------------------//
+			//show the menu
+			System.out.println("\n--- Youre now an authorized Client and can: ---");
+			System.out.println("1. Download..");
+			System.out.println("2. Upload..");
+			System.out.println("3. Delete..");
+			System.out.println("4. Quit");
+			System.out.println("Enter option: ");
+			
+//			String option, filename; 
+//			
+//			InputStreamReader input = new InputStreamReader(System.in);
+//			BufferedReader optionIn = new BufferedReader(input);
+//			option = optionIn.readLine();
+//			System.out.println("Enter filename");
+//			filename = optionIn.readLine();
+			
+			Scanner in = new Scanner(System.in);
+			int choice = in.nextInt();
+			System.out.println("Enter a filename: ");
+//	        System.out.flush();
+//			filename = in.nextLine().trim();
+		    Scanner scanner = new Scanner(System.in);
+		    String filename = scanner.nextLine();
+		    System.out.println("Your filename is " + filename);
+			// sending to the server
+			socketOut.println(choice);
+			socketOut.println(filename);
+			
+			if (choice == 1){
+				System.out.println("Downloading the file from server..");
+				
+				FileWriter fileWriterOut = new FileWriter("files/" + filename);
+				PrintWriter printWriterOut = new PrintWriter(new BufferedWriter(fileWriterOut), true);
+				
+				String line1 = socketIn.readLine();
+			    while (line1!=null) {
+			    	printWriterOut.println(line1); // behover spara alt. skicka till clienten..
+			        line1 = socketIn.readLine();
+			    }
+			    System.out.println("finished reading ");
+			    fileWriterOut.close();
+			    printWriterOut.close();
+				
+			} else if (choice == 2) {
+				System.out.println("Uploading the file to the server..");
+				
+			} else if (choice == 3) {
+				System.out.println("Deleting the file from server..");
+				
+			} else {
+				System.out.println("Quiting..");
+				System.exit(0);
+			}
+			
+			
+			
+//			String numbers = "1.2 3.4 5.6";
+//			System.out.println( ">>>> Sending the numbers " + numbers + " to SecureAdditionServer" );
+//			socketOut.println( numbers );
+//			System.out.println( socketIn.readLine() );
 
 			socketOut.println ( "" );
 		}

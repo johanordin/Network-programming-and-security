@@ -1,14 +1,26 @@
 
 
 
-keytool -genkey -alias johans-filetransfer -keyalg RSA -keypass 123456 -storepass 123456 -keystore KeyClientJohan.ks
+keytool -genkey -alias johans-filetransfer -keyalg RSA -keypass qwerty12345 -storepass qwerty12345 -keystore KeyClientJohan.ks
 
 
-keytool -export -alias johans-filetransfer -storepass 123456 -file johan.cer -keystore KeyClientJohan.ks
+keytool -export -alias server-alias -storepass qwerty12345 -file johan.cer -keystore KeyClientJohan.ks
 
 
-//
-keytool -import -v -trustcacerts -alias johans-filetransfer -file johan.cer -keystore TrustServerJohan.ks -keypass 123456 -storepass 123456
+keytool -import -v -trustcacerts -alias johans-filetransfer -file johan.cer -keystore TrustServerJohan.ks -keypass qwerty12345 -storepass qwerty12345
 
 
-keytool -import -v -trustcacerts -alias johans-filetransfer -file johan.cer -keystore TrustClientJohan.ks -keypass qwerty12345 -storepass 123456
+keytool -import -v -trustcacerts -alias johans-filetransfer -file johan.cer -keystore TrustClientJohan.ks -keypass qwerty12345 -storepass qwerty12345
+
+
+//Delete from truststore
+Delete the aliased certificate authority from the trust store.
+
+    keytool -delete -alias <ca_alias> -keystore <truststore_filename> -storePass <truststore_password>
+    (for example, keytool -delete -alias ca_myserver -keystore jssecacerts -storepass changeIt )
+
+
+//to check content
+keytool -list -keystore KeyClientJohan.ks -alias johans-filetransfer -v
+
+keytool -list -keystore TrustClientJohan.ks
