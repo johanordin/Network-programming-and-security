@@ -24,6 +24,9 @@ public class SecureAdditionServer {
 	static final String STOREPASSWD = "123456";
 	static final String ALIASPASSWD = "123456";
 	
+	//This is for the keyTool class
+	static final String KEYSTORE_PASSWORD = "123456";
+	
 	
 	/** Constructor
 	 * @param port The port where the server
@@ -58,13 +61,19 @@ public class SecureAdditionServer {
 			
 			// --------------------------------------------------------//
 			
-//			File keystoreFile = new File();
-//			
+//			File keystoreFile = new File("keystores/nyStore.ks");
+////			
 //			keystoreFile.getParentFile().mkdirs();
 //			KeyTool kt = new KeyTool(keystoreFile, KEYSTORE_PASSWORD);
-//			// Generate a self signed RSA key with a life of 10 years..
+			
+////		// Generate a self signed RSA key with a life of 10 years..
 //			kt.genKeyPair("selfsigned", "RSA", 2048, 3600);
 //			kt.saveKeyStore();
+			
+//			KeyTool kt = new KeyTool();
+//
+//			kt.run(args, System.out);
+			
 			
 			// --------------------------------------------------------//
 			
@@ -72,8 +81,21 @@ public class SecureAdditionServer {
 			sslContext.init( kmf.getKeyManagers(), tmf.getTrustManagers(), null );
 			
 			SSLServerSocketFactory sslServerFactory = sslContext.getServerSocketFactory();
+			
+			
+			System.out.println("Servern stöder:");
+			for (int i = 0; i < sslServerFactory.getSupportedCipherSuites().length; i++) {
+				System.out.println("getSupported: " + sslServerFactory.getSupportedCipherSuites()[i]);
+			}
+			    
 			SSLServerSocket sss = (SSLServerSocket) sslServerFactory.createServerSocket( port );
 			
+			
+			System.out.println("Servern har Valt:");
+		    for(int i = 0; i < sss.getEnabledCipherSuites().length; i++){
+		    	System.out.println("getEnabled: " + sss.getEnabledCipherSuites()[i]);
+		    }
+				
 			sss.setEnabledCipherSuites( sss.getSupportedCipherSuites() );
 			//Needed to auth client?
 			sss.setNeedClientAuth(true);
@@ -98,12 +120,21 @@ public class SecureAdditionServer {
 				FileReader in = new FileReader("files/" + filename);
 				BufferedReader br = new BufferedReader( in );
 				
-				String line = br.readLine();
-			    while ( line != null ) {
-			        out.println(line);
-			        line = br.readLine();
-			    }
-			    System.out.println("[S] - Server done..");
+				File file = new File("files/" + filename);
+				System.out.println(file.exists());
+
+				if ( file.exists() ){
+					
+					String line = br.readLine();
+				    while ( line != null ) {
+				        out.println(line);
+				        line = br.readLine();
+				    }
+				    System.out.println("[S] - Server done sending..");		
+				} else {
+					System.out.println("[S] - Couldn't not find the file.");	
+				}
+				
 			    in.close();
 			    br.close();
 				
@@ -114,12 +145,14 @@ public class SecureAdditionServer {
 				PrintWriter printWriterOut = new PrintWriter(new BufferedWriter(fileWriterOut), true);
 				
 				String line = inClient.readLine();
-			    while (line!=null) {
+			    
+				while ( line != null ) {
 			    	printWriterOut.println(line);
 			    	//System.out.println(line);
 			        line = inClient.readLine();
 			    }
-			    System.out.println("[S] - Uploading finished");
+			    
+				System.out.println("[S] - Uploading finished");
 			    fileWriterOut.close();
 			    printWriterOut.close();
 
@@ -128,7 +161,6 @@ public class SecureAdditionServer {
 				System.out.println("[S] : Deleting the file from server..");
 
 				File file = new File("files/" + filename);
-				
 				if(!file.delete()){
 					System.out.println("[S] : Deleting failed.");
 				}

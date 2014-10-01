@@ -5,6 +5,7 @@ import java.net.*;
 import java.security.KeyStore;
 import java.util.Enumeration;
 import java.util.Scanner;
+
 import javax.net.ssl.*;
 
 
@@ -63,11 +64,24 @@ public class SecureAdditionClient {
 			sslContext.init( kmf.getKeyManagers(), tmf.getTrustManagers(), null );
 			SSLSocketFactory sslFact = sslContext.getSocketFactory();      	
 			
-			SSLSocket client =  (SSLSocket)sslFact.createSocket(host, port);	
+			// --------------------------------------------------------//
+			System.out.println("Clienten stöder:");
+			for (int i = 0; i < sslFact.getSupportedCipherSuites().length; i++) {
+				System.out.println("getSupported: " + sslFact.getSupportedCipherSuites()[i]);
+			}
+			
+			SSLSocket client =  (SSLSocket)sslFact.createSocket(host, port);
+			
+			// --------------------------------------------------------//
+			System.out.println("Clienten har Valt:");
+		    for(int i = 0; i < client.getEnabledCipherSuites().length; i++){
+		    	System.out.println("getEnabled: " + client.getEnabledCipherSuites()[i]);
+		    }
 			client.setEnabledCipherSuites( client.getSupportedCipherSuites() );
 			
-			String[] suites = client.getSupportedCipherSuites();
-			System.out.println(suites);
+			
+			//String[] suites = client.getSupportedCipherSuites();
+			//System.out.println(suites);
 			
 			client.addHandshakeCompletedListener(new MyHandshakeListener());	
 			client.startHandshake();
