@@ -5,8 +5,8 @@ import java.net.*;
 import java.security.KeyStore;
 import java.util.Enumeration;
 import java.util.Scanner;
-
 import javax.net.ssl.*;
+
 
 public class SecureAdditionClient {
 	private InetAddress host;
@@ -74,29 +74,19 @@ public class SecureAdditionClient {
 			
 			System.out.println("\n>>>> SSL/TLS handshake completed");
 
-			
 			//Create buffers to write to server and receive from server
 			BufferedReader socketIn;
 			socketIn = new BufferedReader( new InputStreamReader( client.getInputStream() ) );
 			PrintWriter socketOut = new PrintWriter( client.getOutputStream(), true );
 			
-			
 			// --------------------------------------------------------//
 			//show the menu
-			System.out.println("\n--- Youre now an authorized Client and can: ---");
-			System.out.println("1. Download..");
-			System.out.println("2. Upload..");
-			System.out.println("3. Delete..");
-			System.out.println("4. Quit");
-			System.out.println("Enter option: ");
-			
-//			String option, filename; 
-//			
-//			InputStreamReader input = new InputStreamReader(System.in);
-//			BufferedReader optionIn = new BufferedReader(input);
-//			option = optionIn.readLine();
-//			System.out.println("Enter filename");
-//			filename = optionIn.readLine();
+			System.out.println("\n--- Your now an authorized Client and can: ---");
+			System.out.println("--- 1. Download..");
+			System.out.println("--- 2. Upload..");
+			System.out.println("--- 3. Delete..");
+			System.out.println("--- 4. Quit..");
+			System.out.println("--- Enter an option: ");
 			
 			Scanner in = new Scanner(System.in);
 			int choice = in.nextInt();
@@ -110,6 +100,8 @@ public class SecureAdditionClient {
 			socketOut.println(choice);
 			socketOut.println(filename);
 			
+			// --------------------------------------------------------//
+			// Depending on the choice --> Do different things
 			if (choice == 1){
 				System.out.println("Downloading the file from server..");
 				
@@ -118,7 +110,7 @@ public class SecureAdditionClient {
 				
 				String line1 = socketIn.readLine();
 			    while (line1!=null) {
-			    	printWriterOut.println(line1); // behover spara alt. skicka till clienten..
+			    	printWriterOut.println(line1);
 			        line1 = socketIn.readLine();
 			    }
 			    System.out.println("finished reading ");
@@ -126,7 +118,20 @@ public class SecureAdditionClient {
 			    printWriterOut.close();
 				
 			} else if (choice == 2) {
+				
 				System.out.println("Uploading the file to the server..");
+				
+				FileReader fileReaderIn = new FileReader("files/" + filename);
+				BufferedReader br = new BufferedReader( fileReaderIn );
+				String line2 = br.readLine();
+				
+			    while (line2!=null) {
+			        socketOut.println(line2); 
+			        line2 = br.readLine();
+			    }
+			    System.out.println("Uploaded the file to the server..");
+			    
+			    fileReaderIn.close();	
 				
 			} else if (choice == 3) {
 				System.out.println("Deleting the file from server..");
@@ -155,7 +160,6 @@ public class SecureAdditionClient {
 	// The test method for the class @param args Optional port number and host name
 	public static void main( String[] args ) {
 		try {
-			
 			
 			InetAddress host = InetAddress.getLocalHost();
 			System.out.println(host);

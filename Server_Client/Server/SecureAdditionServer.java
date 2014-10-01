@@ -2,11 +2,8 @@
 
 import java.io.*;
 import java.net.*;
-
 import javax.net.ssl.*;
-
 import sun.security.tools.KeyTool;
-
 import java.security.*;
 import java.util.StringTokenizer;
 
@@ -40,8 +37,7 @@ public class SecureAdditionServer {
 	public void run() {
 		try {
 			
-			// First initialize the key and trust material
-			
+			// First initialize the key and trust material	
 			//Keytool ktool = KeyTool.getCacertsKeyStore()
 			
 			System.out.println(KeyStore.getDefaultType());
@@ -94,18 +90,17 @@ public class SecureAdditionServer {
 			int choice = Integer.parseInt(inClient.readLine());
 			String filename = inClient.readLine();
 			
-			System.out.println("[S] : " + choice);
-			System.out.println("[S] : " + filename);
-			
+			// --------------------------------------------------------//
+			// Depending on the choice --> Do different things
 			if (choice == 1){
 				System.out.println("[S] - Starting to send the file..");
 				
 				FileReader in = new FileReader("files/" + filename);
 				BufferedReader br = new BufferedReader( in );
+				
 				String line = br.readLine();
 			    while ( line != null ) {
 			        out.println(line);
-			        //System.out.println(line);
 			        line = br.readLine();
 			    }
 			    System.out.println("[S] - Server done..");
@@ -113,15 +108,22 @@ public class SecureAdditionServer {
 			    br.close();
 				
 			} else if (choice == 2) {
-				System.out.println("Uploading the file to the server..");
+				System.out.println("[S] - Uploading the file to the server..");
 				
+				FileWriter fileWriterOut = new FileWriter("files/" + filename);
+				PrintWriter printWriterOut = new PrintWriter(new BufferedWriter(fileWriterOut), true);
 				
-				
-				
-				
-				
-				
-				
+				String line = inClient.readLine();
+			    while (line!=null) {
+			    	printWriterOut.println(line);
+			    	//System.out.println(line);
+			        line = inClient.readLine();
+			    }
+			    System.out.println("[S] - Uploading finished");
+			    fileWriterOut.close();
+			    printWriterOut.close();
+
+
 			} else if (choice == 3) {
 				System.out.println("[S] : Deleting the file from server..");
 
@@ -135,27 +137,6 @@ public class SecureAdditionServer {
 				System.out.println("Quiting..");
 				System.exit(0);
 			}
-			
-			
-			
-//			String str;
-//
-//			while ( !(str = in.readLine()).equals("") ) {
-//				double result = 0;
-//				StringTokenizer st = new StringTokenizer( str );
-//				
-//				try {
-//					while( st.hasMoreTokens() ) {
-//						Double d = new Double( st.nextToken() );
-//						result += d.doubleValue();
-//					}
-//					out.println( "The result is " + result );
-//				}
-//				catch( NumberFormatException nfe ) {
-//					out.println( "Sorry, your list contains an invalid number" );
-//				}
-//			}
-			
 			
 			
 			// --------------------------------------------------------//
