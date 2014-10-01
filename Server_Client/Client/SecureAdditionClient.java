@@ -19,10 +19,10 @@ public class SecureAdditionClient {
 	
 	// This is not a reserved port number 
 	static final int DEFAULT_PORT = 8189;
-	static final String KEYSTORE = "KeyClientJohan.ks";
-	static final String TRUSTSTORE = "TrustClientJohan.ks";
-	static final String STOREPASSWD = "qwerty12345";
-//	static final String ALIASPASSWD = "changeit";
+	static final String KEYSTORE    = "KeyClientJohan.ks";
+	static final String TRUSTSTORE  = "TrustClientJohan.ks";
+	static final String STOREPASSWD = "123456";
+	static final String ALIASPASSWD = "123456";
   
 	
 	// Constructor @param host Internet address of the host where the server is located
@@ -42,8 +42,9 @@ public class SecureAdditionClient {
 			
 			Enumeration en = ks.aliases();
 		      while (en.hasMoreElements()){
-		          System.out.println(en.nextElement()); 
+		          System.out.println("\nks alias: " + en.nextElement() + "\n"); 
 		       }
+		    
 			KeyStore ts = KeyStore.getInstance( "JCEKS" );
 			ts.load( new FileInputStream( TRUSTSTORE ), STOREPASSWD.toCharArray() );
 			
@@ -95,15 +96,29 @@ public class SecureAdditionClient {
 	// The test method for the class @param args Optional port number and host name
 	public static void main( String[] args ) {
 		try {
+			
+			
 			InetAddress host = InetAddress.getLocalHost();
+			System.out.println(host);
+			//System.exit(0);
+			
 			int port = DEFAULT_PORT ;
+			System.out.println(port);
+			System.out.println(args.length);
+			//System.exit(0);
+			
 			if ( args.length > 0 ) {
 				port = Integer.parseInt( args[0] );
 			}
 			if ( args.length > 1 ) {
 				host = InetAddress.getByName( args[1] );
 			}
+			
+			
 			SecureAdditionClient addClient = new SecureAdditionClient( host, port );
+			System.out.println(host);
+			//System.exit(0);
+			
 			addClient.run();
 		}
 		catch ( UnknownHostException uhx ) {
