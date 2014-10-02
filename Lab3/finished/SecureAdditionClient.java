@@ -126,9 +126,11 @@ public class SecureAdditionClient {
 	                
 	                while ((read = inputStream.read(buffer)) != -1) {
 	                    readtotal = readtotal + read;
+	                    System.out.println("Writing :" + read + ", Total written:" + readtotal);
 	                    fileOutputStream.write(buffer, 0, read);
 	                }
 	                
+	                System.out.println("Client Finished :"+ read + ", Total written:" + readtotal);
 	            } catch (IOException ex) {
 	            }
 				
@@ -147,9 +149,11 @@ public class SecureAdditionClient {
 		 
 		            while ((read = fileInputStream.read(buffer)) != -1) {
 		            	readtotal = read + readtotal;
+		                System.out.println("Writing :" + read + ", Total written:" + readtotal);
 		                client.getOutputStream().write(buffer, 0, read);
 		            }
 		            client.getOutputStream().flush();
+		            System.out.println("Client Finished :"+ read + ", Total written:" + readtotal);
 				
 				} catch (Exception e) {
 			            e.printStackTrace();

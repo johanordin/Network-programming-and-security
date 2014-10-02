@@ -36,10 +36,10 @@ public class SecureAdditionClient {
 			KeyStore ks = KeyStore.getInstance( "JCEKS" );
 			ks.load( new FileInputStream( KEYSTORE ), STOREPASSWD.toCharArray() );
 			
-			Enumeration en = ks.aliases();
-		      while (en.hasMoreElements()){
-		          System.out.println("\nks alias: " + en.nextElement() + "\n"); 
-		       }
+			// Enumeration en = ks.aliases();
+		      // while (en.hasMoreElements()){
+		          // System.out.println("\nks alias: " + en.nextElement() + "\n"); 
+		       // }
 		    
 			KeyStore ts = KeyStore.getInstance( "JCEKS" );
 			ts.load( new FileInputStream( TRUSTSTORE ), STOREPASSWD.toCharArray() );
@@ -101,7 +101,7 @@ public class SecureAdditionClient {
 			//get input from the user
 			Scanner in = new Scanner(System.in);
 			int choice = in.nextInt();
-			System.out.println("Enter a filename: ");
+			System.out.println("Enter a filename (include .txt): ");
 			
 		    Scanner scanner = new Scanner(System.in);
 		    String filename = scanner.nextLine();
