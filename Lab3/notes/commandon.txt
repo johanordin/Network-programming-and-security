@@ -6,7 +6,9 @@ keytool -genkey -alias johans-filetransfer -keyalg RSA -keypass 123456 -storepas
 keytool -genkey -alias johans-filetransfer -keyalg RSA -keypass 123456 -storepass 123456 -keystore KeyClientJohan.ks
 
 //export certificate from client
-keytool -export -alias server-alias -storepass 123456 -file johan.cer -keystore KeyClientJohan.ks
+keytool -export -alias johans-filetransfer -storepass 123456 -file johan.cer -keystore KeyClientJohan.ks
+
+keytool -export -alias johans-filetransfer -storepass 123456 -file johanServer.cer -keystore KeyServerJohan.ks
 
 
 keytool -import -v -trustcacerts -alias johans-filetransfer -file johan.cer -keystore TrustServerJohan.ks -keypass 123456 -storepass 123456
@@ -27,3 +29,97 @@ Delete the aliased certificate authority from the trust store.
 keytool -list -keystore KeyClientJohan.ks -alias johans-filetransfer -v
 
 keytool -list -keystore TrustClientJohan.ks
+
+
+////////////////////////////////////////////////////////////////////////////////////
+//////////////////////// Pier     //////////////////////////////////////////////////
+
+
+keytool -genkey -keyalg RSA -alias LIUalias -storetype JCEKS -keystore LIUkeystore.ks
+
+
+keytool -export -alias LIUalias -keys tore LIU key store.ks -storetype JCEKS -rfc -file LIU.cer
+
+
+keytool -import -alias LIUcer -file LIU.cer -storetype JCEKS -keystore LIUtruststore.ks
+
+
+
+// for Pier
+
+keytool -genkey -keyalg RSA -alias PIERalias -storetype JCEKS -keystore PIERkeystore.ks
+
+
+keytool -export -alias PIERalias -keystore PIERkeystore.ks -storetype JCEKS -rfc -file PIER.cer
+
+
+keytool -import -alias PIERcer -file PIER.cer -storetype JCEKS -keystore PIERtruststore.ks
+
+
+
+
+////////////////////////////////////////////////////////////////////////////////////
+//////////////////////// Min Egna //////////////////////////////////////////////////
+
+
+-----------------------
+//Server -> lösen 123456
+
+keytool -genkey -keyalg RSA -alias Serveralias -storetype JCEKS -keystore Serverkeystore.ks
+
+
+keytool -export -alias Serveralias -keystore Serverkeystore.ks -storetype JCEKS -rfc -file Server.cer
+
+
+keytool -import -alias Servercer -file Server.cer -storetype JCEKS -keystore Servertruststore.ks
+
+/// for Server to truse Johan
+keytool -import -alias Johancer -file Johan.cer -storetype JCEKS -keystore Servertruststore.ks
+
+------------------------
+//Johan -> lösen qwerty
+
+keytool -genkey -keyalg RSA -alias Johanalias -storetype JCEKS -keystore Johankeystore.ks
+
+
+keytool -export -alias Johanalias -keystore Johankeystore.ks -storetype JCEKS -rfc -file Johan.cer
+
+
+keytool -import -alias Johancer -file Johan.cer -storetype JCEKS -keystore Johantruststore.ks
+
+
+/// for Johan to truse Server
+keytool -import -alias Servercer -file Server.cer -storetype JCEKS -keystore Johantruststore.ks
+
+
+
+
+////////////////////////////////////////////////////////////////////////////////////
+
+//Keystore server
+keytool -genkey -alias johans-filetransfer -keyalg RSA -keypass 123456 -storepass 123456 -keystore KeyServerJohan.ks
+//Keystore server
+keytool -genkey -alias johans-filetransfer -keyalg RSA -keypass 123456 -storepass 123456 -keystore KeyClientJohan.ks
+
+//export certificate from client
+keytool -export -alias johans-filetransfer -storepass 123456 -file johan.cer -keystore KeyClientJohan.ks
+
+keytool -export -alias johans-filetransfer -storepass 123456 -file johanServer.cer -keystore KeyServerJohan.ks
+
+
+keytool -import -v -trustcacerts -alias johans-filetransfer -file johan.cer -keystore TrustServerJohan.ks -keypass 123456 -storepass 123456
+
+keytool -import -v -trustcacerts -alias johans-filetransfer -file johan.cer -keystore TrustClientJohan.ks -keypass 123456 -storepass 123456
+
+
+
+
+
+
+
+
+
+
+
+
+
