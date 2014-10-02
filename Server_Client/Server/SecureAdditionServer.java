@@ -20,7 +20,7 @@ public class SecureAdditionServer {
 	// This is not a reserved port number 
 	static final int DEFAULT_PORT = 8189;
 	static final String KEYSTORE    = "KeyClientJohan.ks";
-	static final String TRUSTSTORE  = "TrustClientJohan.ks";
+	static final String TRUSTSTORE  = "TrustServerJohan.ks";
 	static final String STOREPASSWD = "123456";
 	static final String ALIASPASSWD = "123456";
 	
@@ -43,7 +43,7 @@ public class SecureAdditionServer {
 			// First initialize the key and trust material	
 			//Keytool ktool = KeyTool.getCacertsKeyStore()
 			
-			System.out.println(KeyStore.getDefaultType());
+//			System.out.println(KeyStore.getDefaultType());
 			
 			KeyStore ks = KeyStore.getInstance( "JCEKS" );
 			ks.load( new FileInputStream( KEYSTORE ), STOREPASSWD.toCharArray() );
@@ -83,18 +83,18 @@ public class SecureAdditionServer {
 			SSLServerSocketFactory sslServerFactory = sslContext.getServerSocketFactory();
 			
 			
-			System.out.println("Servern stöder:");
-			for (int i = 0; i < sslServerFactory.getSupportedCipherSuites().length; i++) {
-				System.out.println("getSupported: " + sslServerFactory.getSupportedCipherSuites()[i]);
-			}
+//			System.out.println("Servern stöder:");
+//			for (int i = 0; i < sslServerFactory.getSupportedCipherSuites().length; i++) {
+//				System.out.println("getSupported: " + sslServerFactory.getSupportedCipherSuites()[i]);
+//			}
 			    
 			SSLServerSocket sss = (SSLServerSocket) sslServerFactory.createServerSocket( port );
 			
 			
-			System.out.println("Servern har Valt:");
-		    for(int i = 0; i < sss.getEnabledCipherSuites().length; i++){
-		    	System.out.println("getEnabled: " + sss.getEnabledCipherSuites()[i]);
-		    }
+//			System.out.println("Servern har Valt:");
+//		    for(int i = 0; i < sss.getEnabledCipherSuites().length; i++){
+//		    	System.out.println("getEnabled: " + sss.getEnabledCipherSuites()[i]);
+//		    }
 				
 			sss.setEnabledCipherSuites( sss.getSupportedCipherSuites() );
 			//Needed to auth client?
@@ -111,7 +111,9 @@ public class SecureAdditionServer {
 			System.out.println("[S] - Reads option from client..");
 			int choice = Integer.parseInt(inClient.readLine());
 			String filename = inClient.readLine();
+
 			
+			//while(true) {
 			// --------------------------------------------------------//
 			// Depending on the choice --> Do different things
 			if (choice == 1){
@@ -129,6 +131,7 @@ public class SecureAdditionServer {
 				    while ( line != null ) {
 				        out.println(line);
 				        line = br.readLine();
+				        System.out.println("...");	
 				    }
 				    System.out.println("[S] - Server done sending..");		
 				} else {
@@ -166,14 +169,21 @@ public class SecureAdditionServer {
 				}
 				
 			} else {
-				System.out.println("Quiting..");
+				System.out.println("Closing the connection..");
+				// --------------------------------------------------------//
+				//Super important --> Closing the connection.
+//				incoming.close();
 				System.exit(0);
 			}
 			
 			
-			// --------------------------------------------------------//
+			
+			//}
+			
+//			// --------------------------------------------------------//
 			//Super important --> Closing the connection.
 			incoming.close();
+			
 		}
 		catch( Exception x ) {
 			System.out.println( x );

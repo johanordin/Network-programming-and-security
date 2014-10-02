@@ -1,16 +1,19 @@
 
 
+//Keystore server
+keytool -genkey -alias johans-filetransfer -keyalg RSA -keypass 123456 -storepass 123456 -keystore KeyServerJohan.ks
+//Keystore server
+keytool -genkey -alias johans-filetransfer -keyalg RSA -keypass 123456 -storepass 123456 -keystore KeyClientJohan.ks
 
-keytool -genkey -alias johans-filetransfer -keyalg RSA -keypass qwerty12345 -storepass qwerty12345 -keystore KeyClientJohan.ks
+//export certificate from client
+keytool -export -alias server-alias -storepass 123456 -file johan.cer -keystore KeyClientJohan.ks
 
 
-keytool -export -alias server-alias -storepass qwerty12345 -file johan.cer -keystore KeyClientJohan.ks
+keytool -import -v -trustcacerts -alias johans-filetransfer -file johan.cer -keystore TrustServerJohan.ks -keypass 123456 -storepass 123456
+
+keytool -import -v -trustcacerts -alias johans-filetransfer -file johan.cer -keystore TrustClientJohan.ks -keypass 123456 -storepass 123456
 
 
-keytool -import -v -trustcacerts -alias johans-filetransfer -file johan.cer -keystore TrustServerJohan.ks -keypass qwerty12345 -storepass qwerty12345
-
-
-keytool -import -v -trustcacerts -alias johans-filetransfer -file johan.cer -keystore TrustClientJohan.ks -keypass qwerty12345 -storepass qwerty12345
 
 
 //Delete from truststore

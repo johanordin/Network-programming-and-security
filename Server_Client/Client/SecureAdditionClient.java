@@ -65,18 +65,18 @@ public class SecureAdditionClient {
 			SSLSocketFactory sslFact = sslContext.getSocketFactory();      	
 			
 			// --------------------------------------------------------//
-			System.out.println("Clienten stöder:");
-			for (int i = 0; i < sslFact.getSupportedCipherSuites().length; i++) {
-				System.out.println("getSupported: " + sslFact.getSupportedCipherSuites()[i]);
-			}
+//			System.out.println("Clienten stöder:");
+//			for (int i = 0; i < sslFact.getSupportedCipherSuites().length; i++) {
+//				System.out.println("getSupported: " + sslFact.getSupportedCipherSuites()[i]);
+//			}
 			
 			SSLSocket client =  (SSLSocket)sslFact.createSocket(host, port);
 			
 			// --------------------------------------------------------//
-			System.out.println("Clienten har Valt:");
-		    for(int i = 0; i < client.getEnabledCipherSuites().length; i++){
-		    	System.out.println("getEnabled: " + client.getEnabledCipherSuites()[i]);
-		    }
+//			System.out.println("Clienten har Valt:");
+//		    for(int i = 0; i < client.getEnabledCipherSuites().length; i++){
+//		    	System.out.println("getEnabled: " + client.getEnabledCipherSuites()[i]);
+//		    }
 			client.setEnabledCipherSuites( client.getSupportedCipherSuites() );
 			
 			
@@ -85,14 +85,17 @@ public class SecureAdditionClient {
 			
 			client.addHandshakeCompletedListener(new MyHandshakeListener());	
 			client.startHandshake();
+			//client.
 			
 			System.out.println("\n>>>> SSL/TLS handshake completed");
 
 			//Create buffers to write to server and receive from server
-			BufferedReader socketIn;
-			socketIn = new BufferedReader( new InputStreamReader( client.getInputStream() ) );
+			
+			BufferedReader socketIn = new BufferedReader( new InputStreamReader( client.getInputStream() ) );
 			PrintWriter socketOut = new PrintWriter( client.getOutputStream(), true );
 			
+			
+			//while(true){
 			// --------------------------------------------------------//
 			//show the menu
 			System.out.println("\n--- Your now an authorized Client and can: ---");
@@ -102,6 +105,8 @@ public class SecureAdditionClient {
 			System.out.println("--- 4. Quit..");
 			System.out.println("--- Enter an option: ");
 			
+			// --------------------------------------------------------//
+			//get input from the user
 			Scanner in = new Scanner(System.in);
 			int choice = in.nextInt();
 			System.out.println("Enter a filename: ");
@@ -117,43 +122,50 @@ public class SecureAdditionClient {
 			// --------------------------------------------------------//
 			// Depending on the choice --> Do different things
 			if (choice == 1){
-				System.out.println("Downloading the file from server..");
+				System.out.println(">>>> Downloading the file from server..");
 				
 				FileWriter fileWriterOut = new FileWriter("files/" + filename);
 				PrintWriter printWriterOut = new PrintWriter(new BufferedWriter(fileWriterOut), true);
 				
-				String line1 = socketIn.readLine();
-			    while (line1!=null) {
-			    	printWriterOut.println(line1);
-			        line1 = socketIn.readLine();
+				String line = socketIn.readLine();
+				
+			    while (line != null) {
+			    	printWriterOut.println(line);
+			        line = socketIn.readLine();
+			        System.out.print("...");
+			        //Pause for 4 seconds
+		            Thread.sleep(400);
 			    }
-			    System.out.println("finished reading ");
+			    System.out.println("\n>>>> Finished downloading.. ");
 			    fileWriterOut.close();
 			    printWriterOut.close();
 				
 			} else if (choice == 2) {
 				
-				System.out.println("Uploading the file to the server..");
-				
+				System.out.println(">>>> Uploading the file to the server..");
 				FileReader fileReaderIn = new FileReader("files/" + filename);
 				BufferedReader br = new BufferedReader( fileReaderIn );
-				String line2 = br.readLine();
 				
-			    while (line2!=null) {
-			        socketOut.println(line2); 
-			        line2 = br.readLine();
+				String line = br.readLine();
+				
+			    while (line != null) {
+			        socketOut.println(line); 
+			        line = br.readLine();
 			    }
-			    System.out.println("Uploaded the file to the server..");
+			    System.out.println(">>>> Finished upload to the server..");
 			    
-			    fileReaderIn.close();	
+			    fileReaderIn.close();
+			    br.close();
 				
 			} else if (choice == 3) {
-				System.out.println("Deleting the file from server..");
+				System.out.println(">>>> Deleting the file from server..");
 				
 			} else {
-				System.out.println("Quiting..");
+				System.out.println(">>>> Quiting..");
 				System.exit(0);
 			}
+			
+			
 			
 			
 			
@@ -163,6 +175,10 @@ public class SecureAdditionClient {
 //			System.out.println( socketIn.readLine() );
 
 			socketOut.println ( "" );
+			
+			//}
+			
+			
 		}
 		catch( Exception x ) {
 			System.out.println( x );
