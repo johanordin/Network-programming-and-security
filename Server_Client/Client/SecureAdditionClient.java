@@ -88,8 +88,6 @@ public class SecureAdditionClient {
 			BufferedReader socketIn = new BufferedReader( new InputStreamReader( client.getInputStream() ) );
 			PrintWriter socketOut = new PrintWriter( client.getOutputStream(), true );
 			
-			
-			//while(true){
 			// --------------------------------------------------------//
 			//show the menu
 			System.out.println("\n--- Your now an authorized Client and can: ---");
@@ -104,8 +102,7 @@ public class SecureAdditionClient {
 			Scanner in = new Scanner(System.in);
 			int choice = in.nextInt();
 			System.out.println("Enter a filename: ");
-//	        System.out.flush();
-//			filename = in.nextLine().trim();
+			
 		    Scanner scanner = new Scanner(System.in);
 		    String filename = scanner.nextLine();
 		    System.out.println("Your filename is " + filename);
@@ -118,28 +115,28 @@ public class SecureAdditionClient {
 			if (choice == 1){
 				System.out.println(">>>> Downloading the file from server..");
 				
-				FileWriter fileWriterOut = new FileWriter("files/" + filename);
-				PrintWriter printWriterOut = new PrintWriter(new BufferedWriter(fileWriterOut), true);
-				
-				String line = socketIn.readLine();
-				
-			    while (line != null) {
-			    	printWriterOut.println(line);
-			        line = socketIn.readLine();
-			        System.out.print("...");
-			        //Pause for 4 seconds
-		            Thread.sleep(400);
-			    }
-			    System.out.println("\n>>>> Finished downloading.. ");
-			    fileWriterOut.close();
-			    printWriterOut.close();
+				try {
+	                InputStream inputStream = client.getInputStream();
+	                FileOutputStream fileOutputStream = new FileOutputStream(new File("files/" + filename));
+	                
+	                byte[] buffer = new byte[client.getReceiveBufferSize()];
+	                int read = 0;
+	                int readtotal = 0;
+	                
+	                while ((read = inputStream.read(buffer)) != -1) {
+	                    readtotal = readtotal + read;
+	                    System.out.println("Writing :" + read + ", Total written:" + readtotal);
+	                    fileOutputStream.write(buffer, 0, read);
+	                }
+	                
+	                System.out.println("Server Finished :"+ read + ", Total written:" + readtotal);
+	            } catch (IOException ex) {
+	            }
 				
 			} else if (choice == 2) {
 				
 				try {
 						System.out.println(">>>> Uploading the file to the server..");
-//					FileReader fileReaderIn = new FileReader("files/" + filename);
-//					BufferedReader br = new BufferedReader( fileReaderIn );
 						
 			            FileInputStream fileInputStream = new FileInputStream("files/" + filename);
 			            
@@ -160,27 +157,6 @@ public class SecureAdditionClient {
 		        }
 				
 				
-				
-//				System.out.println(">>>> Uploading the file to the server..");
-//				FileReader fileReaderIn = new FileReader("files/" + filename);
-//				BufferedReader br = new BufferedReader( fileReaderIn );
-//				
-//				String line = br.readLine();
-//				
-//			    while (line != null) {
-//			        socketOut.println(line); 
-//			        
-//			        line = br.readLine();
-//			    }
-//			    
-//		        //Pause for 4 seconds
-//	            Thread.sleep(4000);
-//			    System.out.println(">>>> Finished upload to the server..");
-//			    
-//			    socketOut.flush();
-//			    fileReaderIn.close();
-//			    br.close();
-				
 			} else if (choice == 3) {
 				System.out.println(">>>> Deleting the file from server..");
 				
@@ -188,19 +164,8 @@ public class SecureAdditionClient {
 				System.out.println(">>>> Quiting..");
 				System.exit(0);
 			}
-			
-			
-			
-			
-			
-//			String numbers = "1.2 3.4 5.6";
-//			System.out.println( ">>>> Sending the numbers " + numbers + " to SecureAdditionServer" );
-//			socketOut.println( numbers );
-//			System.out.println( socketIn.readLine() );
 
 			socketOut.println ( "" );
-			
-			//}
 			
 			
 		}

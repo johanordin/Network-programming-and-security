@@ -2,8 +2,11 @@
 
 import java.io.*;
 import java.net.*;
+
 import javax.net.ssl.*;
+
 import sun.security.tools.KeyTool;
+
 import java.security.*;
 import java.util.StringTokenizer;
 
@@ -112,36 +115,31 @@ public class SecureAdditionServer {
 			// --------------------------------------------------------//
 			// Depending on the choice --> Do different things
 			if (choice == 1){
-				System.out.println("[S] - Starting to send the file..");
 				
-				FileReader in = new FileReader("files/" + filename);
-				BufferedReader br = new BufferedReader( in );
+				System.out.println("[S] - Starting to send the file..");		
+				try {		
+		            FileInputStream fileInputStream = new FileInputStream("files/" + filename);
+		          
+		            byte[] buffer = new byte[incoming.getSendBufferSize()];
+		            int read = 0;
+		            int readtotal = 0;
+		 
+		            while ((read = fileInputStream.read(buffer)) != -1) {
+		                readtotal = read + readtotal;
+		                System.out.println("Writing :" + read + ", Total written:" + readtotal);
+		                incoming.getOutputStream().write(buffer, 0, read);
+		            }
+		            incoming.getOutputStream().flush();
+		           System.out.println("Client Finished :"+ read + ", Total written:" + readtotal);
+		        } catch (Exception e) {
+		            e.printStackTrace();
+		        }
 				
-				File file = new File("files/" + filename);
-				System.out.println(file.exists());
-
-				if ( file.exists() ){
-					
-					String line = br.readLine();
-				    while ( line != null ) {
-				        out.println(line);
-				        line = br.readLine();
-				        System.out.println("...");	
-				    }
-				    System.out.println("[S] - Server done sending..");		
-				} else {
-					System.out.println("[S] - Couldn't not find the file.");	
-				}
-				
-			    in.close();
-			    br.close();
+		
 				
 			} else if (choice == 2) {
 				System.out.println("[S] - Uploading the file to the server..");
-				
-//				FileWriter fileWriterOut = new FileWriter("files/" + filename);
-//				PrintWriter printWriterOut = new PrintWriter(new BufferedWriter(fileWriterOut), true);
-//				
+	
 				try {
 	                InputStream inputStream = incoming.getInputStream();
 	                FileOutputStream fileOutputStream = new FileOutputStream(new File("files/" + filename));
@@ -160,39 +158,8 @@ public class SecureAdditionServer {
 	            } catch (IOException ex) {
 	            }
 				
-				
-				
-				
-				
-				//////////-----------------------------------
-
-//				String line = null;
-//			    int i = 0;
-//				while ( (line = inClient.readLine()) != null ) {
-//			    	
-//					
-//					printWriterOut.println(line);
-//			    	System.out.println(line);
-//			    	System.out.println(i);
-//			    	i++;
-//			    }
-				
-//				String line = inClient.readLine();
-//			    
-//				while ( line != null ) {
-//			    	printWriterOut.println(line);
-//			    	//System.out.println(line);
-//			        line = inClient.readLine();
-//			    }
-//				
-//				
-			    
 				System.out.println("[S] - Uploading finished");
-//			    fileWriterOut.close();
-//			    printWriterOut.close();
-			    
-			    
-			    /////////////////////////////////////////////
+
 
 
 			} else if (choice == 3) {
@@ -207,17 +174,10 @@ public class SecureAdditionServer {
 				System.out.println("Closing the connection..");
 				// --------------------------------------------------------//
 				//Super important --> Closing the connection.
-//				incoming.close();
+				incoming.close();
 				System.exit(0);
 			}
 			
-			
-			
-			//}
-			
-//			// --------------------------------------------------------//
-			//Super important --> Closing the connection.
-			//incoming.close();
 			
 		}
 		catch( Exception x ) {
