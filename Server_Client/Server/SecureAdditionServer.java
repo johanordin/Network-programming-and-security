@@ -39,7 +39,6 @@ public class SecureAdditionServer {
 			
 			// First initialize the key and trust material	
 			//Keytool ktool = KeyTool.getCacertsKeyStore()
-			
 //			System.out.println(KeyStore.getDefaultType());
 			
 			KeyStore ks = KeyStore.getInstance( "JCEKS" );
@@ -57,23 +56,7 @@ public class SecureAdditionServer {
 			tmf.init( ts );
 			
 			// --------------------------------------------------------//
-			
-//			File keystoreFile = new File("keystores/nyStore.ks");
-////			
-//			keystoreFile.getParentFile().mkdirs();
-//			KeyTool kt = new KeyTool(keystoreFile, KEYSTORE_PASSWORD);
-			
-////		// Generate a self signed RSA key with a life of 10 years..
-//			kt.genKeyPair("selfsigned", "RSA", 2048, 3600);
-//			kt.saveKeyStore();
-			
-//			KeyTool kt = new KeyTool();
-//
-//			kt.run(args, System.out);
-			
-			
 			// --------------------------------------------------------//
-			
 			SSLContext sslContext = SSLContext.getInstance( "TLS" );
 			sslContext.init( kmf.getKeyManagers(), tmf.getTrustManagers(), null );
 			
@@ -95,7 +78,7 @@ public class SecureAdditionServer {
 				
 			sss.setEnabledCipherSuites( sss.getSupportedCipherSuites() );
 			//Needed to auth client?
-			//sss.setNeedClientAuth(true);
+			sss.setNeedClientAuth(true);
 			
 			System.out.println("\n>>>> SecureAdditionServer: active ");
 			SSLSocket incoming = (SSLSocket)sss.accept();
@@ -109,7 +92,6 @@ public class SecureAdditionServer {
 			System.out.println("[S] - Reads option from client..");
 			int choice = Integer.parseInt(inClient.readLine());
 			String filename = inClient.readLine();
-
 			
 			//while(true) {
 			// --------------------------------------------------------//
@@ -130,12 +112,11 @@ public class SecureAdditionServer {
 		                incoming.getOutputStream().write(buffer, 0, read);
 		            }
 		            incoming.getOutputStream().flush();
-		           System.out.println("Client Finished :"+ read + ", Total written:" + readtotal);
+		            System.out.println("Server Finished :"+ read + ", Total written:" + readtotal);
 		        } catch (Exception e) {
 		            e.printStackTrace();
 		        }
-				
-		
+				System.out.println("[S] - Finished to send the file..");	
 				
 			} else if (choice == 2) {
 				System.out.println("[S] - Uploading the file to the server..");
@@ -150,42 +131,39 @@ public class SecureAdditionServer {
 	                
 	                while ((read = inputStream.read(buffer)) != -1) {
 	                    readtotal = readtotal + read;
-	                    System.out.println("Writing :" + read + ", Total written:" + readtotal);
+	                    System.out.println("[S] - Writing :" + read + ", Total written:" + readtotal);
 	                    fileOutputStream.write(buffer, 0, read);
 	                }
 	                
-	                System.out.println("Server Finished :"+ read + ", Total written:" + readtotal);
+	                System.out.println("[S] - Server Finished :"+ read + ", Total written:" + readtotal);
 	            } catch (IOException ex) {
 	            }
 				
 				System.out.println("[S] - Uploading finished");
 
 
-
 			} else if (choice == 3) {
+				
 				System.out.println("[S] : Deleting the file from server..");
-
 				File file = new File("files/" + filename);
 				if(!file.delete()){
 					System.out.println("[S] : Deleting failed.");
 				}
 				
 			} else {
+				
 				System.out.println("Closing the connection..");
 				// --------------------------------------------------------//
 				//Super important --> Closing the connection.
 				incoming.close();
 				System.exit(0);
-			}
-			
-			
+			}	
 		}
 		catch( Exception x ) {
 			System.out.println( x );
 			x.printStackTrace();
 		}
 	}
-	
 	
 	/** The test method for the class
 	 * @param args[0] Optional port number in place of

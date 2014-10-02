@@ -113,6 +113,7 @@ public class SecureAdditionClient {
 			// --------------------------------------------------------//
 			// Depending on the choice --> Do different things
 			if (choice == 1){
+				
 				System.out.println(">>>> Downloading the file from server..");
 				
 				try {
@@ -129,32 +130,36 @@ public class SecureAdditionClient {
 	                    fileOutputStream.write(buffer, 0, read);
 	                }
 	                
-	                System.out.println("Server Finished :"+ read + ", Total written:" + readtotal);
+	                System.out.println("Client Finished :"+ read + ", Total written:" + readtotal);
 	            } catch (IOException ex) {
 	            }
 				
+				System.out.println(">>>> Finished downloading " + filename + " from server..");
+				
 			} else if (choice == 2) {
 				
+				
+				System.out.println(">>>> Uploading the file to the server..");
 				try {
-						System.out.println(">>>> Uploading the file to the server..");
-						
-			            FileInputStream fileInputStream = new FileInputStream("files/" + filename);
-			            
-			          
-			            byte[] buffer = new byte[client.getSendBufferSize()];
-			            int read = 0;
-			            int readtotal = 0;
-			 
-			            while ((read = fileInputStream.read(buffer)) != -1) {
-			                readtotal = read + readtotal;
-			                System.out.println("Writing :" + read + ", Total written:" + readtotal);
-			                client.getOutputStream().write(buffer, 0, read);
-			            }
-			            client.getOutputStream().flush();
-			           System.out.println("Client Finished :"+ read + ", Total written:" + readtotal);
-			        } catch (Exception e) {
+		            FileInputStream fileInputStream = new FileInputStream("files/" + filename);
+		          
+		            byte[] buffer = new byte[client.getSendBufferSize()];
+		            int read = 0;
+		            int readtotal = 0;
+		 
+		            while ((read = fileInputStream.read(buffer)) != -1) {
+		            	readtotal = read + readtotal;
+		                System.out.println("Writing :" + read + ", Total written:" + readtotal);
+		                client.getOutputStream().write(buffer, 0, read);
+		            }
+		            client.getOutputStream().flush();
+		            System.out.println("Client Finished :"+ read + ", Total written:" + readtotal);
+				
+				} catch (Exception e) {
 			            e.printStackTrace();
 		        }
+				
+				System.out.println(">>>> Finished uploading to the server..");
 				
 				
 			} else if (choice == 3) {
