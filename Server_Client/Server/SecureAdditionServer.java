@@ -10,17 +10,11 @@ import java.util.StringTokenizer;
 
 public class SecureAdditionServer {
 	private int port;
-	// This is not a reserved port number
-//	static final int DEFAULT_PORT = 8189;
-//	static final String KEYSTORE = "jpatkeystore.ks";
-//	static final String TRUSTSTORE = "jpattruststore.ks";
-//	static final String STOREPASSWD = "changeit";
-//	static final String ALIASPASSWD = "changeit";
-	
+
 	// This is not a reserved port number 
 	static final int DEFAULT_PORT = 8189;
-	static final String KEYSTORE    = "KeyClientJohan.ks";
-	static final String TRUSTSTORE  = "TrustServerJohan.ks";
+	static final String KEYSTORE    = "Serverkeystore.ks";
+	static final String TRUSTSTORE  = "Servertruststore.ks";
 	static final String STOREPASSWD = "123456";
 	static final String ALIASPASSWD = "123456";
 	
@@ -98,7 +92,7 @@ public class SecureAdditionServer {
 				
 			sss.setEnabledCipherSuites( sss.getSupportedCipherSuites() );
 			//Needed to auth client?
-			sss.setNeedClientAuth(true);
+			//sss.setNeedClientAuth(true);
 			
 			System.out.println("\n>>>> SecureAdditionServer: active ");
 			SSLSocket incoming = (SSLSocket)sss.accept();
@@ -106,6 +100,7 @@ public class SecureAdditionServer {
 			// --------------------------------------------------------//
 			// declare the buffers
 			BufferedReader inClient = new BufferedReader( new InputStreamReader( incoming.getInputStream() ) );
+			
 			PrintWriter out = new PrintWriter( incoming.getOutputStream(), true );			
 			
 			System.out.println("[S] - Reads option from client..");
@@ -144,20 +139,60 @@ public class SecureAdditionServer {
 			} else if (choice == 2) {
 				System.out.println("[S] - Uploading the file to the server..");
 				
-				FileWriter fileWriterOut = new FileWriter("files/" + filename);
-				PrintWriter printWriterOut = new PrintWriter(new BufferedWriter(fileWriterOut), true);
+//				FileWriter fileWriterOut = new FileWriter("files/" + filename);
+//				PrintWriter printWriterOut = new PrintWriter(new BufferedWriter(fileWriterOut), true);
+//				
+				try {
+	                InputStream inputStream = incoming.getInputStream();
+	                FileOutputStream fileOutputStream = new FileOutputStream(new File("files/" + filename));
+	                
+	                byte[] buffer = new byte[incoming.getReceiveBufferSize()];
+	                int read = 0;
+	                int readtotal = 0;
+	                
+	                while ((read = inputStream.read(buffer)) != -1) {
+	                    readtotal = readtotal + read;
+	                    System.out.println("Writing :" + read + ", Total written:" + readtotal);
+	                    fileOutputStream.write(buffer, 0, read);
+	                }
+	                
+	                System.out.println("Server Finished :"+ read + ", Total written:" + readtotal);
+	            } catch (IOException ex) {
+	            }
 				
-				String line = inClient.readLine();
-			    
-				while ( line != null ) {
-			    	printWriterOut.println(line);
-			    	//System.out.println(line);
-			        line = inClient.readLine();
-			    }
+				
+				
+				
+				
+				//////////-----------------------------------
+
+//				String line = null;
+//			    int i = 0;
+//				while ( (line = inClient.readLine()) != null ) {
+//			    	
+//					
+//					printWriterOut.println(line);
+//			    	System.out.println(line);
+//			    	System.out.println(i);
+//			    	i++;
+//			    }
+				
+//				String line = inClient.readLine();
+//			    
+//				while ( line != null ) {
+//			    	printWriterOut.println(line);
+//			    	//System.out.println(line);
+//			        line = inClient.readLine();
+//			    }
+//				
+//				
 			    
 				System.out.println("[S] - Uploading finished");
-			    fileWriterOut.close();
-			    printWriterOut.close();
+//			    fileWriterOut.close();
+//			    printWriterOut.close();
+			    
+			    
+			    /////////////////////////////////////////////
 
 
 			} else if (choice == 3) {
@@ -182,7 +217,7 @@ public class SecureAdditionServer {
 			
 //			// --------------------------------------------------------//
 			//Super important --> Closing the connection.
-			incoming.close();
+			//incoming.close();
 			
 		}
 		catch( Exception x ) {

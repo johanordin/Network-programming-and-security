@@ -12,19 +12,13 @@ import javax.net.ssl.*;
 public class SecureAdditionClient {
 	private InetAddress host;
 	private int port;
-	// This is not a reserved port number 
-//	static final int DEFAULT_PORT = 8189;
-//	static final String KEYSTORE = "jpatkeystore.ks";
-//	static final String TRUSTSTORE = "jpattruststore.ks";
-//	static final String STOREPASSWD = "changeit";
-//	static final String ALIASPASSWD = "changeit";
 	
 	// This is not a reserved port number 
 	static final int DEFAULT_PORT = 8189;
-	static final String KEYSTORE    = "KeyClientJohan.ks";
-	static final String TRUSTSTORE  = "TrustClientJohan.ks";
-	static final String STOREPASSWD = "123456";
-	static final String ALIASPASSWD = "123456";
+	static final String KEYSTORE    = "Johankeystore.ks";
+	static final String TRUSTSTORE  = "Johantruststore.ks";
+	static final String STOREPASSWD = "qwerty";
+	static final String ALIASPASSWD = "qwerty";
   
 	
 	// Constructor @param host Internet address of the host where the server is located
@@ -142,20 +136,50 @@ public class SecureAdditionClient {
 				
 			} else if (choice == 2) {
 				
-				System.out.println(">>>> Uploading the file to the server..");
-				FileReader fileReaderIn = new FileReader("files/" + filename);
-				BufferedReader br = new BufferedReader( fileReaderIn );
+				try {
+						System.out.println(">>>> Uploading the file to the server..");
+//					FileReader fileReaderIn = new FileReader("files/" + filename);
+//					BufferedReader br = new BufferedReader( fileReaderIn );
+						
+			            FileInputStream fileInputStream = new FileInputStream("files/" + filename);
+			            
+			          
+			            byte[] buffer = new byte[client.getSendBufferSize()];
+			            int read = 0;
+			            int readtotal = 0;
+			 
+			            while ((read = fileInputStream.read(buffer)) != -1) {
+			                readtotal = read + readtotal;
+			                System.out.println("Writing :" + read + ", Total written:" + readtotal);
+			                client.getOutputStream().write(buffer, 0, read);
+			            }
+			            client.getOutputStream().flush();
+			           System.out.println("Client Finished :"+ read + ", Total written:" + readtotal);
+			        } catch (Exception e) {
+			            e.printStackTrace();
+		        }
 				
-				String line = br.readLine();
 				
-			    while (line != null) {
-			        socketOut.println(line); 
-			        line = br.readLine();
-			    }
-			    System.out.println(">>>> Finished upload to the server..");
-			    
-			    fileReaderIn.close();
-			    br.close();
+				
+//				System.out.println(">>>> Uploading the file to the server..");
+//				FileReader fileReaderIn = new FileReader("files/" + filename);
+//				BufferedReader br = new BufferedReader( fileReaderIn );
+//				
+//				String line = br.readLine();
+//				
+//			    while (line != null) {
+//			        socketOut.println(line); 
+//			        
+//			        line = br.readLine();
+//			    }
+//			    
+//		        //Pause for 4 seconds
+//	            Thread.sleep(4000);
+//			    System.out.println(">>>> Finished upload to the server..");
+//			    
+//			    socketOut.flush();
+//			    fileReaderIn.close();
+//			    br.close();
 				
 			} else if (choice == 3) {
 				System.out.println(">>>> Deleting the file from server..");
