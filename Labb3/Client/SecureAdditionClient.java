@@ -30,17 +30,12 @@ public class SecureAdditionClient {
 	
   // The method used to start a client object
 	public void run() {
+		
 		try {
-			
 			// First initialize the key and trust material
 			KeyStore ks = KeyStore.getInstance( "JCEKS" );
 			ks.load( new FileInputStream( KEYSTORE ), STOREPASSWD.toCharArray() );
-			
-			// Enumeration en = ks.aliases();
-		      // while (en.hasMoreElements()){
-		          // System.out.println("\nks alias: " + en.nextElement() + "\n"); 
-		       // }
-		    
+			   
 			KeyStore ts = KeyStore.getInstance( "JCEKS" );
 			ts.load( new FileInputStream( TRUSTSTORE ), STOREPASSWD.toCharArray() );
 			
@@ -53,7 +48,6 @@ public class SecureAdditionClient {
 			tmf.init( ts );
 			
 			// --------------------------------------------------------//
-			
 			SSLContext sslContext = SSLContext.getInstance( "TLS" );
 			sslContext.init( kmf.getKeyManagers(), tmf.getTrustManagers(), null );
 			SSLSocketFactory sslFact = sslContext.getSocketFactory();      	
@@ -96,9 +90,8 @@ public class SecureAdditionClient {
 			// --------------------------------------------------------//
 			// Depending on the choice --> Do different things
 			if (choice == 1){
-				
 				System.out.println(">>>> Downloading the file from server..");
-				
+
 				try {
 	                InputStream inputStream = client.getInputStream();
 	                FileOutputStream fileOutputStream = new FileOutputStream(new File("files/" + filename));
@@ -118,7 +111,6 @@ public class SecureAdditionClient {
 				System.out.println(">>>> Finished downloading " + filename + " from server..");
 				
 			} else if (choice == 2) {
-				
 				
 				System.out.println(">>>> Uploading the file to the server..");
 				try {
@@ -148,10 +140,7 @@ public class SecureAdditionClient {
 				System.out.println(">>>> Quiting..");
 				System.exit(0);
 			}
-
 			socketOut.println ( "" );
-			
-			
 		}
 		catch( Exception x ) {
 			System.out.println( x );
@@ -183,7 +172,7 @@ public class SecureAdditionClient {
 			
 			SecureAdditionClient addClient = new SecureAdditionClient( host, port );
 			System.out.println(host);
-			//System.exit(0);
+
 			
 			addClient.run();
 		}
