@@ -37,10 +37,7 @@ public class SecureAdditionServer {
 	public void run() {
 		try {
 			
-			// First initialize the key and trust material	
-			//Keytool ktool = KeyTool.getCacertsKeyStore()
-//			System.out.println(KeyStore.getDefaultType());
-			
+			// First initialize the key and trust material		
 			KeyStore ks = KeyStore.getInstance( "JCEKS" );
 			ks.load( new FileInputStream( KEYSTORE ), STOREPASSWD.toCharArray() );
 			
@@ -54,28 +51,13 @@ public class SecureAdditionServer {
 			// TrustManagers decide whether to allow connections
 			TrustManagerFactory tmf = TrustManagerFactory.getInstance( "SunX509" );
 			tmf.init( ts );
-			
-			// --------------------------------------------------------//
+
 			// --------------------------------------------------------//
 			SSLContext sslContext = SSLContext.getInstance( "TLS" );
 			sslContext.init( kmf.getKeyManagers(), tmf.getTrustManagers(), null );
-			
 			SSLServerSocketFactory sslServerFactory = sslContext.getServerSocketFactory();
 			
-			
-//			System.out.println("Servern stöder:");
-//			for (int i = 0; i < sslServerFactory.getSupportedCipherSuites().length; i++) {
-//				System.out.println("getSupported: " + sslServerFactory.getSupportedCipherSuites()[i]);
-//			}
-			    
 			SSLServerSocket sss = (SSLServerSocket) sslServerFactory.createServerSocket( port );
-			
-			
-//			System.out.println("Servern har Valt:");
-//		    for(int i = 0; i < sss.getEnabledCipherSuites().length; i++){
-//		    	System.out.println("getEnabled: " + sss.getEnabledCipherSuites()[i]);
-//		    }
-				
 			sss.setEnabledCipherSuites( sss.getSupportedCipherSuites() );
 			//Needed to auth client?
 			sss.setNeedClientAuth(true);

@@ -59,32 +59,15 @@ public class SecureAdditionClient {
 			SSLSocketFactory sslFact = sslContext.getSocketFactory();      	
 			
 			// --------------------------------------------------------//
-//			System.out.println("Clienten stöder:");
-//			for (int i = 0; i < sslFact.getSupportedCipherSuites().length; i++) {
-//				System.out.println("getSupported: " + sslFact.getSupportedCipherSuites()[i]);
-//			}
-			
 			SSLSocket client =  (SSLSocket)sslFact.createSocket(host, port);
-			
-			// --------------------------------------------------------//
-//			System.out.println("Clienten har Valt:");
-//		    for(int i = 0; i < client.getEnabledCipherSuites().length; i++){
-//		    	System.out.println("getEnabled: " + client.getEnabledCipherSuites()[i]);
-//		    }
 			client.setEnabledCipherSuites( client.getSupportedCipherSuites() );
-			
-			
-			//String[] suites = client.getSupportedCipherSuites();
-			//System.out.println(suites);
 			
 			client.addHandshakeCompletedListener(new MyHandshakeListener());	
 			client.startHandshake();
-			//client.
 			
 			System.out.println("\n>>>> SSL/TLS handshake completed");
 
 			//Create buffers to write to server and receive from server
-			
 			BufferedReader socketIn = new BufferedReader( new InputStreamReader( client.getInputStream() ) );
 			PrintWriter socketOut = new PrintWriter( client.getOutputStream(), true );
 			
